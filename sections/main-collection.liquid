@@ -162,6 +162,14 @@
     display:none!important;
   }
 
+
+  @media screen and (min-width:750px){
+    .product-grid-container .product-grid{
+      grid-template-columns:repeat(auto-fit,minmax(260px,300px))!important;
+      justify-content:center!important;
+    }
+  }
+
 {% endstylesheet %}
 
 {% schema %}
