@@ -1,3 +1,6 @@
+{% if page.handle == 'uber-uns' %}
+  {% render 'alsaadah-about-page' %}
+{% else %}
 
 
 {% liquid
@@ -26,6 +29,9 @@
     {% content_for 'blocks' %}
   </div>
 </div>
+
+
+{% endif %}
 
 {% schema %}
 {
