@@ -108,7 +108,8 @@
   }
 
   .alsaadah-categories__inner {
-    width: 100%;
+    width: min(1560px, calc(100% - 48px));
+    margin-inline: auto;
   }
 
   /* ---------------------------------------------------------
@@ -378,6 +379,10 @@
     .alsaadah-categories {
       padding-block: 46px;
       overflow: hidden;
+    }
+
+    .alsaadah-categories__inner {
+      width: calc(100% - 28px);
     }
 
     .alsaadah-categories__header {
