@@ -1,0 +1,158 @@
+<section class="alsaadah-contact">
+  <div class="alsaadah-contact__inner">
+    <div class="alsaadah-contact__head">
+      <p class="alsaadah-contact__eyebrow">ALSAADAH AUSTRIA</p>
+      <h1>Kontakt</h1>
+      <p>Wir sind für Sie da.</p>
+    </div>
+
+    <div class="alsaadah-contact__grid">
+      <aside class="alsaadah-contact__info">
+        <p class="alsaadah-contact__eyebrow">KONTAKT</p>
+        <h2>Einfach ins Gespräch kommen.</h2>
+        <p class="alsaadah-contact__intro">
+          Sie haben Fragen zu Produkten, Verfügbarkeit oder unserem Sortiment?
+          Schreiben Sie uns – wir melden uns so schnell wie möglich.
+        </p>
+
+        <div class="alsaadah-contact__audiences">
+          <div>
+            <span>01</span>
+            <strong>Privatkunden</strong>
+            <p>Fragen zu Produkten, Größen und Verfügbarkeit.</p>
+          </div>
+          <div>
+            <span>02</span>
+            <strong>Handel & Gastronomie</strong>
+            <p>Anfragen zu Sortiment, größeren Mengen und Zusammenarbeit.</p>
+          </div>
+        </div>
+      </aside>
+
+      <div class="alsaadah-contact__form-card">
+        <p class="alsaadah-contact__eyebrow">NACHRICHT SENDEN</p>
+        <h2>Wie können wir helfen?</h2>
+
+        {% form 'contact', class: 'alsaadah-contact__form' %}
+          {% if form.posted_successfully? %}
+            <div class="alsaadah-contact__success" tabindex="-1">
+              Vielen Dank. Ihre Nachricht wurde erfolgreich gesendet.
+            </div>
+          {% endif %}
+
+          {% if form.errors %}
+            <div class="alsaadah-contact__error" tabindex="-1">
+              Bitte prüfen Sie Ihre Angaben und versuchen Sie es erneut.
+            </div>
+          {% endif %}
+
+          <div class="alsaadah-contact__row">
+            <div class="alsaadah-contact__field">
+              <label for="ContactForm-name">Name</label>
+              <input
+                id="ContactForm-name"
+                type="text"
+                name="contact[name]"
+                autocomplete="name"
+                value="{{ form.name | escape }}"
+                placeholder="Name"
+              >
+            </div>
+
+            <div class="alsaadah-contact__field">
+              <label for="ContactForm-email">E-Mail-Adresse</label>
+              <input
+                id="ContactForm-email"
+                type="email"
+                name="contact[email]"
+                autocomplete="email"
+                autocapitalize="off"
+                spellcheck="false"
+                required
+                value="{{ form.email | escape }}"
+                placeholder="E-Mail-Adresse"
+              >
+            </div>
+          </div>
+
+          <div class="alsaadah-contact__field">
+            <label for="ContactForm-phone">Telefon <span>(optional)</span></label>
+            <input
+              id="ContactForm-phone"
+              type="tel"
+              name="contact[phone]"
+              autocomplete="tel"
+              value="{{ form.phone | escape }}"
+              placeholder="Telefon"
+            >
+          </div>
+
+          <div class="alsaadah-contact__field">
+            <label for="ContactForm-body">Nachricht</label>
+            <textarea
+              id="ContactForm-body"
+              name="contact[body]"
+              rows="7"
+              required
+              placeholder="Wie können wir Ihnen helfen?"
+            >{{ form.body }}</textarea>
+          </div>
+
+          <button type="submit">Nachricht senden</button>
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.alsaadah-contact{background:#fff;color:#26372f;padding:clamp(56px,7vw,104px) 0}
+.alsaadah-contact__inner{width:min(1120px,calc(100% - 40px));margin:auto}
+.alsaadah-contact__head{max-width:760px;margin-bottom:clamp(42px,6vw,72px)}
+.alsaadah-contact__eyebrow{margin:0 0 14px;color:#e30613;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.alsaadah-contact__head h1{margin:0;color:#083b29;font-size:clamp(52px,7vw,88px);line-height:.96;letter-spacing:-.045em}
+.alsaadah-contact__head>p:last-child{margin:20px 0 0;color:#083b29;font-size:clamp(24px,3vw,38px);font-weight:700;line-height:1.15}
+.alsaadah-contact__grid{display:grid;grid-template-columns:.88fr 1.12fr;gap:22px;align-items:stretch}
+.alsaadah-contact__info,.alsaadah-contact__form-card{border-radius:28px;padding:clamp(30px,4vw,48px)}
+.alsaadah-contact__info{background:#083b29;color:#fff}
+.alsaadah-contact__info .alsaadah-contact__eyebrow{color:#ff7279}
+.alsaadah-contact__info h2,.alsaadah-contact__form-card h2{margin:0 0 18px;font-size:clamp(30px,3.5vw,46px);line-height:1.06;letter-spacing:-.03em}
+.alsaadah-contact__info h2{color:#fff}
+.alsaadah-contact__form-card h2{color:#083b29}
+.alsaadah-contact__intro{margin:0;color:#dce8e2;font-size:17px;line-height:1.75}
+.alsaadah-contact__audiences{display:grid;gap:14px;margin-top:34px}
+.alsaadah-contact__audiences>div{padding:18px 0;border-top:1px solid rgba(255,255,255,.16)}
+.alsaadah-contact__audiences span{display:inline-block;margin-right:10px;color:#ff7279;font-size:12px;font-weight:800}
+.alsaadah-contact__audiences strong{font-size:17px}
+.alsaadah-contact__audiences p{margin:7px 0 0;color:#c7d7cf;line-height:1.55}
+.alsaadah-contact__form-card{background:#f8f6f1}
+.alsaadah-contact__form{display:flex;flex-direction:column;gap:16px;margin-top:28px}
+.alsaadah-contact__row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.alsaadah-contact__field{display:flex;flex-direction:column;gap:8px}
+.alsaadah-contact__field label{color:#083b29;font-size:13px;font-weight:700}
+.alsaadah-contact__field label span{color:#7b857f;font-weight:500}
+.alsaadah-contact__field input,.alsaadah-contact__field textarea{width:100%;border:1px solid #d9dfda;border-radius:14px;background:#fff;color:#26372f;padding:14px 16px;font:inherit;outline:none;transition:border-color .18s ease,box-shadow .18s ease}
+.alsaadah-contact__field input{min-height:52px}
+.alsaadah-contact__field textarea{resize:vertical;min-height:170px}
+.alsaadah-contact__field input:focus,.alsaadah-contact__field textarea:focus{border-color:#083b29;box-shadow:0 0 0 3px rgba(8,59,41,.08)}
+.alsaadah-contact__form button{align-self:flex-start;min-height:50px;border:0;border-radius:999px;background:#e30613;color:#fff;padding:0 24px;font:inherit;font-weight:800;cursor:pointer}
+.alsaadah-contact__form button:hover{opacity:.9}
+.alsaadah-contact__success,.alsaadah-contact__error{padding:14px 16px;border-radius:14px;font-weight:650}
+.alsaadah-contact__success{background:#e8f4ed;color:#083b29}
+.alsaadah-contact__error{background:#fff0f0;color:#a20d18}
+@media(max-width:749px){
+  .alsaadah-contact__inner{width:min(100% - 28px,1120px)}
+  .alsaadah-contact__grid{grid-template-columns:1fr}
+  .alsaadah-contact__info,.alsaadah-contact__form-card{padding:28px 22px}
+  .alsaadah-contact__row{grid-template-columns:1fr}
+  .alsaadah-contact__form button{width:100%}
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name":"ALSAADAH Kontakt",
+  "settings":[],
+  "presets":[{"name":"ALSAADAH Kontakt"}]
+}
+{% endschema %}
