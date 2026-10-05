@@ -370,6 +370,54 @@
       white-space: nowrap;
     }
   }
+
+  /* ALSAADAH product media: consistent, centered and intentionally smaller */
+  .product-information__media .product-media-container{
+    aspect-ratio:1!important;
+    min-height:0!important;
+    max-height:540px!important;
+    background:#f8f6f1!important;
+    border-radius:24px!important;
+    overflow:hidden!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+  }
+
+  .product-information__media .product-media{
+    width:100%!important;
+    height:100%!important;
+    display:grid!important;
+    place-items:center!important;
+  }
+
+  .product-information__media .product-media__image{
+    width:auto!important;
+    height:auto!important;
+    max-width:72%!important;
+    max-height:460px!important;
+    object-fit:contain!important;
+    object-position:center!important;
+    background:transparent!important;
+    transform:none!important;
+  }
+
+  .product-information__media slideshow-arrows{
+    display:none!important;
+  }
+
+  @media screen and (max-width:749px){
+    .product-information__media .product-media-container{
+      max-height:440px!important;
+      border-radius:18px!important;
+    }
+
+    .product-information__media .product-media__image{
+      max-width:80%!important;
+      max-height:380px!important;
+    }
+  }
+
 {% endstylesheet %}
 
 {% schema %}
