@@ -1,0 +1,1283 @@
+{% liquid
+  assign selected_collection = section.settings.collection
+  assign product_limit = section.settings.product_limit
+  assign visible_count = 0
+
+  if selected_collection != blank
+    assign visible_count = selected_collection.products_count
+
+    if visible_count > product_limit
+      assign visible_count = product_limit
+    endif
+  endif
+
+  assign all_products_url = section.settings.all_products_url
+
+  if all_products_url == blank
+    assign all_products_url = routes.all_products_collection_url
+  endif
+%}
+
+<section
+  id="AlsaadahFeaturedProducts-{{ section.id }}"
+  class="alsaadah-featured-products"
+  {% if section.settings.background_image != blank %}
+    style="
+      --alsaadah-products-bg:
+        url('{{ section.settings.background_image | image_url: width: 2400 }}');
+    "
+  {% endif %}
+>
+  <div class="alsaadah-featured-products__inner">
+
+    <header class="alsaadah-featured-products__header">
+
+      <div class="alsaadah-featured-products__intro">
+
+        {% if section.settings.heading != blank %}
+          <h2 class="alsaadah-featured-products__heading">
+            {{ section.settings.heading | escape }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.subheading != blank %}
+          <p class="alsaadah-featured-products__subheading">
+            {{ section.settings.subheading | escape }}
+          </p>
+        {% endif %}
+
+      </div>
+
+      {% if section.settings.show_collection_link %}
+        <a
+          href="{{ all_products_url }}"
+          class="alsaadah-featured-products__all"
+        >
+          <span>
+            {{ section.settings.collection_link_label | escape }}
+          </span>
+
+          <span
+            class="alsaadah-featured-products__all-arrow"
+            aria-hidden="true"
+          >
+            →
+          </span>
+        </a>
+      {% endif %}
+
+    </header>
+
+
+    {% if selected_collection != blank and visible_count > 0 %}
+
+      <div
+        class="
+          alsaadah-featured-products__grid
+          alsaadah-featured-products__grid--count-{{ visible_count }}
+        "
+      >
+
+        {% for product in selected_collection.products limit: product_limit %}
+
+{% liquid
+  assign card_image = product.featured_media.preview_image
+
+  if card_image == blank
+    assign card_image = product.featured_image
+  endif
+
+  assign image_alt = card_image.alt | default: product.title
+%}
+
+          <article class="alsaadah-product-card">
+
+            <a
+              href="{{ product.url }}"
+              class="alsaadah-product-card__link"
+              aria-label="{{ product.title | escape }}"
+            >
+
+              <div class="alsaadah-product-card__media">
+
+{% if card_image != blank %}
+
+  {{
+    card_image
+    | image_url: width: 1200
+    | image_tag:
+      class: 'alsaadah-product-card__image',
+      loading: 'lazy',
+      widths: '320, 480, 640, 800, 1000, 1200',
+      sizes: '(min-width: 1200px) 390px, (min-width: 750px) 42vw, 88vw',
+      alt: image_alt
+  }}
+
+{% else %}
+
+  <div
+    class="alsaadah-product-card__placeholder"
+    aria-hidden="true"
+  ></div>
+
+{% endif %}
+
+                <span
+                  class="alsaadah-product-card__open"
+                  aria-hidden="true"
+                >
+                  ↗
+                </span>
+
+              </div>
+
+
+              <div class="alsaadah-product-card__content">
+
+                {% if product.type != blank %}
+                  <p class="alsaadah-product-card__type">
+                    {{ product.type | escape }}
+                  </p>
+                {% elsif product.vendor != blank %}
+                  <p class="alsaadah-product-card__type">
+                    {{ product.vendor | escape }}
+                  </p>
+                {% endif %}
+
+
+                <h3 class="alsaadah-product-card__title">
+                  {{ product.title | escape }}
+                </h3>
+
+
+                {% if visible_count == 1 and product.description != blank %}
+                  <p class="alsaadah-product-card__description">
+                    {{
+                      product.description
+                      | strip_html
+                      | truncate: 170
+                    }}
+                  </p>
+                {% endif %}
+
+
+                <span class="alsaadah-product-card__more">
+
+                  <span>
+                    Mehr erfahren
+                  </span>
+
+                  <span
+                    class="alsaadah-product-card__more-arrow"
+                    aria-hidden="true"
+                  >
+                    →
+                  </span>
+
+                </span>
+
+              </div>
+
+            </a>
+
+          </article>
+
+        {% endfor %}
+
+      </div>
+
+
+    {% else %}
+
+      <div class="alsaadah-featured-products__empty">
+
+        <div class="alsaadah-featured-products__empty-icon">
+          ◇
+        </div>
+
+        <p>
+          Wählen Sie eine Collection aus, um Produkte anzuzeigen.
+        </p>
+
+      </div>
+
+    {% endif %}
+
+  </div>
+</section>
+
+
+{% stylesheet %}
+
+/* =========================================================
+   ALSAADAH FEATURED PRODUCTS
+   ========================================================= */
+
+.alsaadah-featured-products {
+  position: relative;
+  overflow: hidden;
+
+  padding-block:
+    clamp(64px, 7vw, 104px);
+
+  background-color: #f8f6f1;
+
+  background-image:
+    linear-gradient(
+      rgba(250, 248, 243, 0.16),
+      rgba(250, 248, 243, 0.16)
+    ),
+    var(--alsaadah-products-bg, none);
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.alsaadah-featured-products::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 50%;
+
+  width: min(1240px, calc(100% - 48px));
+  height: 1px;
+
+  transform: translateX(-50%);
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(11, 59, 41, 0.12),
+      transparent
+    );
+}
+
+.alsaadah-featured-products__inner {
+  position: relative;
+
+  width: min(1240px, calc(100% - 48px));
+
+  margin-inline: auto;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.alsaadah-featured-products__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 36px;
+
+  margin-bottom:
+    clamp(34px, 4vw, 52px);
+}
+
+.alsaadah-featured-products__intro {
+  max-width: 680px;
+}
+
+.alsaadah-featured-products__heading {
+  margin: 0;
+
+  color: #083b29;
+
+  font-size:
+    clamp(36px, 3.4vw, 52px);
+
+  line-height: 0.98;
+
+  font-weight: 780;
+
+  letter-spacing: -0.045em;
+}
+
+.alsaadah-featured-products__subheading {
+  max-width: 540px;
+
+  margin:
+    14px 0 0;
+
+  color: #66756d;
+
+  font-size:
+    clamp(15px, 1.2vw, 17px);
+
+  line-height: 1.55;
+}
+
+
+/* =========================================================
+   ALL PRODUCTS LINK
+   ========================================================= */
+
+.alsaadah-featured-products__all {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  flex: 0 0 auto;
+
+  min-height: 46px;
+
+  padding:
+    0 18px;
+
+  border:
+    1px solid rgba(11, 59, 41, 0.18);
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.55);
+
+  color: #083b29;
+
+  font-size: 14px;
+
+  font-weight: 720;
+
+  text-decoration: none;
+
+  backdrop-filter: blur(8px);
+
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.alsaadah-featured-products__all-arrow {
+  font-size: 18px;
+
+  transition:
+    transform 180ms ease;
+}
+
+.alsaadah-featured-products__all:hover {
+  transform: translateY(-2px);
+
+  border-color: #e30613;
+
+  background: #e30613;
+
+  color: #ffffff;
+}
+
+.alsaadah-featured-products__all:hover
+.alsaadah-featured-products__all-arrow {
+  transform: translateX(3px);
+}
+
+
+/* =========================================================
+   PRODUCT GRID
+   ========================================================= */
+
+.alsaadah-featured-products__grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 24px;
+
+  width: 100%;
+
+  margin-inline: auto;
+}
+
+
+/* TWO PRODUCTS */
+
+.alsaadah-featured-products__grid--count-2 {
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  max-width: 630px;
+}
+
+
+/* THREE PRODUCTS */
+
+.alsaadah-featured-products__grid--count-3 {
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  max-width: 940px;
+}
+
+
+/* =========================================================
+   ONE PRODUCT = FEATURED SPOTLIGHT
+   ========================================================= */
+
+.alsaadah-featured-products__grid--count-1 {
+  display: block;
+
+  max-width: 900px;
+}
+
+.alsaadah-featured-products__grid--count-1
+.alsaadah-product-card__link {
+  display: grid;
+
+  grid-template-columns:
+    minmax(300px, 390px)
+    minmax(0, 1fr);
+
+  align-items: stretch;
+
+  overflow: hidden;
+
+  min-height: 410px;
+
+  border:
+    1px solid rgba(11, 59, 41, 0.08);
+
+  border-radius: 28px;
+
+  background:
+    rgba(255, 255, 255, 0.7);
+
+  box-shadow:
+    0 18px 55px
+    rgba(11, 59, 41, 0.08);
+
+  backdrop-filter: blur(10px);
+
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.alsaadah-featured-products__grid--count-1
+.alsaadah-product-card__media {
+  height: 100%;
+
+  min-height: 410px;
+
+  padding: 42px;
+
+  border: 0;
+
+  border-radius: 0;
+
+  box-shadow: none;
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      #f8faf5 0%,
+      #edf2e9 52%,
+      #e4ebe0 100%
+    );
+}
+
+.alsaadah-featured-products__grid--count-1
+.alsaadah-product-card__image {
+  transform: scale(0.86);
+}
+
+.alsaadah-featured-products__grid--count-1
+.alsaadah-product-card__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding:
+    clamp(34px, 5vw, 58px);
+}
+
+.alsaadah-featured-products__grid--count-1
+.alsaadah-product-card__type {
+  margin-bottom: 12px;
+}
+
+.alsaadah-featured-products__grid--count-1
+.alsaadah-product-card__title {
+  max-width: 420px;
+
+  font-size:
+    clamp(30px, 3vw, 42px);
+
+  line-height: 1.02;
+
+  letter-spacing: -0.045em;
+}
+
+.alsaadah-featured-products__grid--count-1
+.alsaadah-product-card__description {
+  display: block;
+
+  max-width: 450px;
+
+  margin:
+    18px 0 0;
+
+  color: #617168;
+
+  font-size: 16px;
+
+  line-height: 1.6;
+}
+
+.alsaadah-featured-products__grid--count-1
+.alsaadah-product-card__more {
+  align-self: flex-start;
+
+  min-height: 48px;
+
+  margin-top: 28px;
+
+  padding:
+    0 19px;
+
+  border-radius: 12px;
+
+  background: #e30613;
+
+  color: #ffffff;
+}
+
+.alsaadah-featured-products__grid--count-1
+.alsaadah-product-card__open {
+  display: none;
+}
+
+
+/* =========================================================
+   STANDARD PRODUCT CARD
+   ========================================================= */
+
+.alsaadah-product-card {
+  min-width: 0;
+
+  width: 100%;
+}
+
+.alsaadah-product-card__link {
+  display: block;
+
+  height: 100%;
+
+  color: inherit;
+
+  text-decoration: none;
+}
+
+
+/* =========================================================
+   PRODUCT MEDIA
+   ========================================================= */
+
+.alsaadah-product-card__media {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 345px;
+
+  overflow: hidden;
+
+  padding: 30px;
+
+  border:
+    1px solid rgba(11, 59, 41, 0.07);
+
+  border-radius: 22px;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      #fafbf7 0%,
+      #eef2ea 55%,
+      #e4ebe0 100%
+    );
+
+  box-shadow:
+    0 10px 34px
+    rgba(11, 59, 41, 0.055);
+
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+
+/* =========================================================
+   PRODUCT IMAGE
+   ========================================================= */
+
+.alsaadah-product-card__image {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  object-position: center;
+
+  transform: scale(0.88);
+
+  filter:
+    drop-shadow(
+      0 14px 14px
+      rgba(20, 41, 29, 0.08)
+    );
+
+  transition:
+    transform 420ms
+    cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+
+/* =========================================================
+   PLACEHOLDER
+   ========================================================= */
+
+.alsaadah-product-card__placeholder {
+  width: 100%;
+  height: 100%;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #eef2ea 0%,
+      #dfe7dc 100%
+    );
+}
+
+
+/* =========================================================
+   FLOATING ACTION
+   ========================================================= */
+
+.alsaadah-product-card__open {
+  position: absolute;
+
+  right: 16px;
+  bottom: 16px;
+
+  z-index: 2;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+
+  border:
+    1px solid rgba(11, 59, 41, 0.08);
+
+  border-radius: 50%;
+
+  background:
+    rgba(255, 255, 255, 0.94);
+
+  color: #083b29;
+
+  font-size: 19px;
+
+  line-height: 1;
+
+  box-shadow:
+    0 6px 20px
+    rgba(0, 0, 0, 0.09);
+
+  backdrop-filter: blur(8px);
+
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+
+/* =========================================================
+   PRODUCT CONTENT
+   ========================================================= */
+
+.alsaadah-product-card__content {
+  padding:
+    18px 5px 4px;
+}
+
+.alsaadah-product-card__type {
+  margin:
+    0 0 7px;
+
+  color: #7b887f;
+
+  font-size: 11px;
+
+  line-height: 1.2;
+
+  font-weight: 720;
+
+  letter-spacing: 0.11em;
+
+  text-transform: uppercase;
+}
+
+.alsaadah-product-card__title {
+  margin: 0;
+
+  color: #0d3928;
+
+  font-size:
+    clamp(19px, 1.45vw, 23px);
+
+  line-height: 1.14;
+
+  font-weight: 760;
+
+  letter-spacing: -0.03em;
+}
+
+.alsaadah-product-card__description {
+  display: none;
+}
+
+.alsaadah-product-card__more {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 13px;
+
+  color: #0b3b29;
+
+  font-size: 14px;
+
+  font-weight: 720;
+
+  line-height: 1;
+
+  transition:
+    gap 180ms ease,
+    color 180ms ease,
+    background-color 180ms ease;
+}
+
+.alsaadah-product-card__more-arrow {
+  font-size: 18px;
+
+  transition:
+    transform 180ms ease;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+@media (hover: hover) {
+
+  .alsaadah-product-card__link:hover
+  .alsaadah-product-card__media {
+    transform:
+      translateY(-5px);
+
+    border-color:
+      rgba(11, 59, 41, 0.12);
+
+    box-shadow:
+      0 20px 44px
+      rgba(11, 59, 41, 0.11);
+  }
+
+
+  .alsaadah-product-card__link:hover
+  .alsaadah-product-card__image {
+    transform:
+      scale(0.93);
+  }
+
+
+  .alsaadah-product-card__link:hover
+  .alsaadah-product-card__open {
+    transform:
+      translateY(-3px);
+
+    background: #e30613;
+
+    color: #ffffff;
+
+    box-shadow:
+      0 8px 24px
+      rgba(227, 6, 19, 0.22);
+  }
+
+
+  .alsaadah-product-card__link:hover
+  .alsaadah-product-card__more {
+    gap: 12px;
+
+    color: #e30613;
+  }
+
+
+  .alsaadah-product-card__link:hover
+  .alsaadah-product-card__more-arrow {
+    transform:
+      translateX(2px);
+  }
+
+
+  .alsaadah-featured-products__grid--count-1
+  .alsaadah-product-card__link:hover {
+    transform:
+      translateY(-4px);
+
+    border-color:
+      rgba(11, 59, 41, 0.13);
+
+    box-shadow:
+      0 24px 64px
+      rgba(11, 59, 41, 0.12);
+  }
+
+
+  .alsaadah-featured-products__grid--count-1
+  .alsaadah-product-card__link:hover
+  .alsaadah-product-card__more {
+    gap: 11px;
+
+    background: #c90012;
+
+    color: #ffffff;
+  }
+
+}
+
+@media screen and (max-width: 749px) {
+  .alsaadah-featured-products {
+    background-position: center top;
+  }
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.alsaadah-featured-products__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  max-width: 720px;
+
+  min-height: 190px;
+
+  margin-inline: auto;
+
+  padding: 36px;
+
+  border:
+    1px solid rgba(11, 59, 41, 0.07);
+
+  border-radius: 22px;
+
+  background:
+    rgba(237, 242, 233, 0.75);
+
+  color: #61736a;
+
+  text-align: center;
+}
+
+.alsaadah-featured-products__empty p {
+  margin: 0;
+}
+
+.alsaadah-featured-products__empty-icon {
+  color: #0b3b29;
+
+  font-size: 28px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media screen and (max-width: 989px) {
+
+  .alsaadah-featured-products__inner {
+    width:
+      min(900px, calc(100% - 36px));
+  }
+
+
+  .alsaadah-featured-products__grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    max-width: 650px;
+
+    gap: 22px;
+  }
+
+
+  .alsaadah-featured-products__grid--count-1 {
+    display: block;
+
+    max-width: 760px;
+  }
+
+
+  .alsaadah-featured-products__grid--count-1
+  .alsaadah-product-card__link {
+    grid-template-columns:
+      minmax(280px, 330px)
+      minmax(0, 1fr);
+
+    min-height: 370px;
+  }
+
+
+  .alsaadah-featured-products__grid--count-1
+  .alsaadah-product-card__media {
+    min-height: 370px;
+
+    padding: 32px;
+  }
+
+
+  .alsaadah-product-card__media {
+    height: 325px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 749px) {
+
+  .alsaadah-featured-products {
+    padding-block:
+      52px 58px;
+  }
+
+
+  .alsaadah-featured-products::before {
+    width:
+      calc(100% - 32px);
+  }
+
+
+  .alsaadah-featured-products__inner {
+    width:
+      calc(100% - 32px);
+  }
+
+
+  .alsaadah-featured-products__header {
+    align-items: flex-start;
+
+    margin-bottom: 28px;
+  }
+
+
+  .alsaadah-featured-products__heading {
+    font-size:
+      clamp(31px, 9vw, 39px);
+  }
+
+
+  .alsaadah-featured-products__subheading {
+    margin-top: 10px;
+
+    font-size: 15px;
+  }
+
+
+  .alsaadah-featured-products__all {
+    display: none;
+  }
+
+
+  /* SINGLE PRODUCT */
+
+  .alsaadah-featured-products__grid--count-1 {
+    display: block;
+
+    max-width: 100%;
+  }
+
+
+  .alsaadah-featured-products__grid--count-1
+  .alsaadah-product-card__link {
+    display: block;
+
+    min-height: 0;
+
+    border-radius: 22px;
+  }
+
+
+  .alsaadah-featured-products__grid--count-1
+  .alsaadah-product-card__media {
+    height: 350px;
+
+    min-height: 0;
+
+    padding: 30px;
+  }
+
+
+  .alsaadah-featured-products__grid--count-1
+  .alsaadah-product-card__content {
+    padding:
+      25px 24px 28px;
+  }
+
+
+  .alsaadah-featured-products__grid--count-1
+  .alsaadah-product-card__title {
+    font-size: 29px;
+  }
+
+
+  .alsaadah-featured-products__grid--count-1
+  .alsaadah-product-card__description {
+    margin-top: 14px;
+
+    font-size: 15px;
+  }
+
+
+  .alsaadah-featured-products__grid--count-1
+  .alsaadah-product-card__more {
+    margin-top: 22px;
+  }
+
+
+  /* MULTIPLE PRODUCTS */
+
+  .alsaadah-featured-products__grid:not(
+    .alsaadah-featured-products__grid--count-1
+  ) {
+    display: flex;
+
+    justify-content: flex-start;
+
+    max-width: none;
+
+    gap: 16px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    margin-right:
+      -16px;
+
+    padding-right:
+      16px;
+
+    padding-bottom:
+      10px;
+
+    scroll-snap-type:
+      x mandatory;
+
+    scrollbar-width:
+      none;
+
+    -webkit-overflow-scrolling:
+      touch;
+  }
+
+
+  .alsaadah-featured-products__grid:not(
+    .alsaadah-featured-products__grid--count-1
+  )::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  .alsaadah-featured-products__grid:not(
+    .alsaadah-featured-products__grid--count-1
+  )
+  .alsaadah-product-card {
+    flex:
+      0 0 min(78vw, 286px);
+
+    scroll-snap-align:
+      start;
+  }
+
+
+  .alsaadah-product-card__media {
+    height: 325px;
+
+    padding: 24px;
+
+    border-radius: 18px;
+  }
+
+
+  .alsaadah-product-card__image {
+    transform:
+      scale(0.88);
+  }
+
+
+  .alsaadah-product-card__title {
+    font-size: 20px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 420px) {
+
+  .alsaadah-featured-products__inner {
+    width:
+      calc(100% - 24px);
+  }
+
+
+  .alsaadah-featured-products__grid--count-1
+  .alsaadah-product-card__media {
+    height: 320px;
+
+    padding: 24px;
+  }
+
+
+  .alsaadah-featured-products__grid:not(
+    .alsaadah-featured-products__grid--count-1
+  )
+  .alsaadah-product-card {
+    flex-basis:
+      min(82vw, 280px);
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.alsaadah-product-card__link:focus-visible,
+.alsaadah-featured-products__all:focus-visible {
+  outline:
+    3px solid #e30613;
+
+  outline-offset:
+    5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .alsaadah-product-card__link,
+  .alsaadah-product-card__media,
+  .alsaadah-product-card__image,
+  .alsaadah-product-card__open,
+  .alsaadah-product-card__more,
+  .alsaadah-product-card__more-arrow,
+  .alsaadah-featured-products__all,
+  .alsaadah-featured-products__all-arrow {
+    transition: none;
+  }
+
+}
+
+{% endstylesheet %}
+
+
+{% schema %}
+{
+  "name": "ALSAADAH Products",
+  "tag": "section",
+  "class": "alsaadah-featured-products-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ausgewählte Produkte"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Beliebte Spezialitäten aus unserem Sortiment."
+    },
+    {
+     "type": "image_picker",
+     "id": "background_image",
+     "label": "Hintergrundbild"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "label": "Anzahl Produkte",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_link",
+      "label": "Link zu allen Produkten",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "collection_link_label",
+      "label": "Link Text",
+      "default": "Alle Produkte"
+    },
+    {
+      "type": "url",
+      "id": "all_products_url",
+      "label": "Alle Produkte URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "ALSAADAH Products"
+    }
+  ]
+}
+{% endschema %}
