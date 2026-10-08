@@ -6,11 +6,13 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "alsaadah_hero": {
       "type": "alsaadah-hero",
       "settings": {
+        "image": "shopify://shop_images/fe6a0796-2324-48d8-8c09-9d6013255d69.png",
         "eyebrow": "ALSAADAH ÖSTERREICH",
         "heading": "Authentischer Geschmack. Einfach entdeckt.",
         "description": "<p>Ausgewählte Spezialitäten aus der Levante – für Handel, Gastronomie und Genießer in Österreich.</p>",
@@ -20,38 +22,44 @@
     },
     "alsaadah_categories": {
       "type": "alsaadah-categories",
-      "settings": {
-        "heading": "Was suchen Sie?",
-        "subheading": "Entdecken Sie unser Sortiment."
-      },
       "blocks": {
         "oliven": {
           "type": "category",
           "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/d096d851-93bf-41d5-aaec-943af87b447b.png",
             "title": "Oliven"
           }
         },
         "eingelegtes": {
           "type": "category",
           "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/c4bc07c4-2ebe-4a0a-8d4d-ba2b76a46174.png",
             "title": "Eingelegtes"
           }
         },
         "feinkost": {
           "type": "category",
           "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/8d08d3f9-0974-470e-98da-f71fbeaccdb2.png",
             "title": "Feinkost"
           }
         },
         "sesam": {
           "type": "category",
           "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/2ed5c99e-5b7c-4d66-92ff-9af8fb43a38d.png",
             "title": "Sesam"
           }
         },
         "trockenwaren": {
           "type": "category",
           "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/f6fa15b8-20c9-45d4-b327-0a521087ba3c.png",
             "title": "Trockenwaren"
           }
         }
@@ -62,13 +70,18 @@
         "feinkost",
         "sesam",
         "trockenwaren"
-      ]
+      ],
+      "settings": {
+        "heading": "Was suchen Sie?",
+        "subheading": "Entdecken Sie unser Sortiment."
+      }
     },
     "alsaadah_products": {
       "type": "alsaadah-featured-products",
       "settings": {
         "heading": "Ausgewählte Produkte",
         "subheading": "Beliebte Spezialitäten aus unserem Sortiment.",
+        "background_image": "shopify://shop_images/54ba97b0-8f75-40e8-b10d-195fb2e84303.png",
         "collection": "highlights",
         "product_limit": 4,
         "show_collection_link": true,
